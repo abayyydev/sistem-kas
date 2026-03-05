@@ -21,16 +21,20 @@ if (!in_array($_SESSION['role'], $allowed_roles)) {
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// --- HANDLE GET (AMBIL DATA PENDING) ---
+// --- HANDLE GET (AMBIL DATA) ---
 if ($method === 'GET') {
     try {
-        // Ambil transaksi pending, join dengan tabel user untuk tau siapa yang input
+        // Ambil SEMUA transaksi, lalu urutkan:
+        // 1. Status 'pending' paling atas
+        // 2. Diikuti tanggal terbaru
         $sql = "SELECT t.*, u.full_name as pic_name 
                 FROM transactions t
                 JOIN users u ON t.user_id = u.id
-                WHERE t.status = 'pending'
-                ORDER BY t.date ASC";
-
+                ORDER BY 
+                    CASE WHEN t.status = 'pending' THEN 1 ELSE 2 END ASC,
+                    t.date DESC, 
+                    t.created_at DESC";
+        
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         $data = $stmt->fetchAll();
@@ -46,7 +50,7 @@ if ($method === 'GET') {
 // --- HANDLE POST (VERIFIKASI / TOLAK) ---
 if ($method === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
-
+    
     $trx_id = $input['id'] ?? null;
     $action = $input['action'] ?? null; // 'verify' atau 'reject'
     $reason = $input['reason'] ?? '';   // Alasan jika ditolak
@@ -69,7 +73,7 @@ if ($method === 'POST') {
                     verified_by = :auditor, 
                     verified_at = :waktu 
                 WHERE id = :id";
-
+        
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             'status' => $new_status,
@@ -81,7 +85,7 @@ if ($method === 'POST') {
         // 2. Catat Audit Log
         $log_action = ($action === 'verify') ? 'VERIFY_DATA' : 'REJECT_DATA';
         $log_desc = "Audit Transaksi ID #$trx_id menjadi $new_status. " . ($reason ? "Alasan: $reason" : "");
-
+        
         $log_sql = "INSERT INTO audit_logs (user_id, action, details, ip_address) VALUES (?, ?, ?, ?)";
         $log_stmt = $pdo->prepare($log_sql);
         $log_stmt->execute([$auditor_id, $log_action, $log_desc, $_SERVER['REMOTE_ADDR']]);
