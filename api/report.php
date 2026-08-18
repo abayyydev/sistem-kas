@@ -13,7 +13,7 @@ if (!isset($_SESSION['logged_in'])) {
 
 // 2. Ambil Parameter Filter dari Frontend
 $branch_filter = $_GET['branch'] ?? 'all'; // 'all', 'Jakarta', 'Bandung', dll
-$month = $_GET['month'] ?? date('m');
+$month = $_GET['month'] ?? 'all';
 $year = $_GET['year'] ?? date('Y');
 
 try {
@@ -22,14 +22,17 @@ try {
     $sql = "SELECT t.*, u.full_name as pic_name 
             FROM transactions t
             JOIN users u ON t.user_id = u.id
-            WHERE MONTH(t.date) = :month 
-            AND YEAR(t.date) = :year
+            WHERE YEAR(t.date) = :year
             AND t.status != 'rejected'"; // Tampilkan verified & pending (rejected tidak masuk laporan)
 
     $params = [
-        'month' => $month,
         'year' => $year
     ];
+
+    if ($month !== 'all') {
+        $sql .= " AND MONTH(t.date) = :month";
+        $params['month'] = $month;
+    }
 
     // Filter Cabang (Jika bukan 'all')
     // Jika user adalah PJ Gudang, paksa filter hanya ke cabangnya sendiri

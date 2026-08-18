@@ -3,7 +3,7 @@ include 'includes/header.php';
 include 'includes/sidebar.php';
 
 // Cek apakah user memiliki akses manajemen
-$is_management = ($role === 'admin' || $role === 'pimpinan');
+$is_management = in_array($role, ['super_admin', 'admin', 'pimpinan']);
 ?>
 
 <!-- Load Chart.js dari CDN -->

@@ -43,8 +43,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <?php endif; ?>
         </a>
 
-        <!-- Role: PJ GUDANG & ADMIN -->
-        <?php if ($role == 'pj_gudang' || $role == 'admin'): ?>
+        <!-- Role: PJ GUDANG & SUPER ADMIN -->
+        <?php if ($role == 'pj_gudang' || $role == 'super_admin'): ?>
             <div class="px-4 py-2 mt-6">
                 <span class="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Transaksi</span>
             </div>
@@ -58,8 +58,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </a>
         <?php endif; ?>
 
-        <!-- Role: TUP & ADMIN -->
-        <?php if ($role == 'tup' || $role == 'admin'): ?>
+        <!-- Role: TUP, ADMIN & SUPER ADMIN -->
+        <?php if (in_array($role, ['tup', 'admin', 'super_admin'])): ?>
             <div class="px-4 py-2 mt-6">
                 <span class="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Audit & Kontrol</span>
             </div>
@@ -85,7 +85,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </a>
 
         <!-- Admin Settings -->
-        <?php if ($role == 'admin'): ?>
+        <?php if ($role == 'super_admin'): ?>
             <div class="px-4 py-2 mt-6">
                 <span class="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Pengaturan</span>
             </div>

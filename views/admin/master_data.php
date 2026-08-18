@@ -6,8 +6,8 @@ $path = '../../';
 include $path . 'includes/header.php';
 include $path . 'includes/sidebar.php';
 
-// Cek akses: Hanya Admin yang boleh mengelola Master Data
-if ($role !== 'admin') {
+// Cek akses: Hanya Super Admin
+if ($role !== 'super_admin') {
     echo "<script>window.location.href = '" . $path . "index.php';</script>";
     exit;
 }

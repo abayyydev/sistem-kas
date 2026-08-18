@@ -52,7 +52,7 @@ try {
     ];
 
     // 2. Data Statistik Khusus Admin/Pimpinan
-    if ($role == 'admin' || $role == 'pimpinan') {
+    if (in_array($role, ['super_admin', 'admin', 'pimpinan'])) {
         // Bar Chart: Pengeluaran Per Cabang
         $q_branch = "SELECT branch, SUM(amount) as total_out FROM transactions 
                      WHERE type = 'out' AND status = 'verified' $date_filter 

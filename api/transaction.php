@@ -11,7 +11,7 @@ if (!isset($_SESSION['logged_in'])) {
     exit;
 }
 
-$allowed_roles = ['pj_gudang', 'admin'];
+$allowed_roles = ['pj_gudang', 'super_admin'];
 if (!in_array($_SESSION['role'], $allowed_roles)) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Akses ditolak.']);
@@ -74,7 +74,7 @@ try {
     $pdo->beginTransaction();
 
     $sql = "INSERT INTO transactions (user_id, branch, date, type, category, description, amount, is_zakat, proof_file, status) 
-            VALUES (:uid, :branch, :date, :type, :cat, :desc, :amt, :zakat, :proof, 'pending')";
+            VALUES (:uid, :branch, :date, :type, :cat, :desc, :amt, :zakat, :proof, 'verified')";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([

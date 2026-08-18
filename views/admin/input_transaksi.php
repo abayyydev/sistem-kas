@@ -6,8 +6,8 @@ $path = '../../';
 include $path . 'includes/header.php';
 include $path . 'includes/sidebar.php';
 
-// Cek akses: Hanya PJ Gudang & Admin yang boleh masuk sini
-if ($role !== 'pj_gudang' && $role !== 'admin') {
+// Cek akses: Hanya PJ Gudang & Super Admin yang boleh masuk sini
+if ($role !== 'pj_gudang' && $role !== 'super_admin') {
     echo "<script>
             window.location.href = '" . $path . "index.php';
           </script>";
@@ -283,7 +283,7 @@ if ($role !== 'pj_gudang' && $role !== 'admin') {
                 Swal.fire({
                     icon: 'success',
                     title: '<span class="font-black text-2xl">Berhasil Disimpan!</span>',
-                    text: 'Transaksi telah dicatat dan masuk dalam antrean audit.',
+                    text: 'Transaksi telah berhasil dicatat.',
                     confirmButtonColor: '#9333ea',
                     customClass: {
                         popup: 'rounded-[2rem] shadow-2xl',
